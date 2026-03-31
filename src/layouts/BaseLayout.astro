@@ -3,13 +3,9 @@ import "../styles/global.css";
 
 interface Props {
     title: string;
-    description?: string;
 }
 
-const {
-    title,
-    description = "SelfObsidian — личный knowledge hub на Astro + MDX",
-} = Astro.props;
+const { title } = Astro.props;
 ---
 
 <!doctype html>
@@ -18,14 +14,11 @@ const {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     </head>
     <body>
-        <slot name="header" />
-        <main>
-            <slot />
-        </main>
-        <slot name="footer" />
+        <nav>
+            <a href="/" class="logo">self<span>obsidian</span></a>
+        </nav>
+        <slot />
     </body>
 </html>

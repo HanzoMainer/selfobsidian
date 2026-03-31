@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
+    (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
+);
+---
+
+<BaseLayout title="selfobsidian">
+    <div class="notes">
+        {
+            notes.map((note) => (
+                <a href={`/notes/${note.id}`} class="note-item">
+                    <div>
+                        <div class="note-title">{note.data.title}</div>
+                        {note.data.tags.length > 0 && (
+                            <div class="tags">
+                                {note.data.tags.map((t) => (
+                                    <span class="tag">#{t}</span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div class="note-date">
+                        {note.data.date.toLocaleDateString("ru-RU", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                        })}
+                    </div>
+                </a>
+            ))
+        }
+    </div>
+</BaseLayout>

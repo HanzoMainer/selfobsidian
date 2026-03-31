@@ -1,8 +1,11 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
+import node from "@astrojs/node";
+import keystatic from "@keystatic/astro";
 
 export default defineConfig({
-    site: "https://example.com",
-    integrations: [mdx(), react()],
+    output: "static",
+    adapter: node({ mode: "middleware" }),
+    integrations: [mdx(), react(), keystatic()],
 });
