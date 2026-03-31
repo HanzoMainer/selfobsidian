@@ -1,9 +1,7 @@
 import { config, fields, collection } from "@keystatic/core";
 
 export default config({
-    storage: {
-        kind: "local",
-    },
+    storage: { kind: "local" },
     collections: {
         notes: collection({
             label: "Notes",
@@ -11,9 +9,7 @@ export default config({
             slugField: "title",
             format: { contentField: "content" },
             schema: {
-                title: fields.slug({
-                    name: { label: "Title" },
-                }),
+                title: fields.slug({ name: { label: "Title" } }),
                 date: fields.date({ label: "Date" }),
                 tags: fields.array(fields.text({ label: "Tag" }), {
                     label: "Tags",

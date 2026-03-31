@@ -3,15 +3,16 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MdxCallout from "../../components/MdxCallout.astro";
 
-export async function getStaticPaths() {
-    const notes = await getCollection("notes", ({ data }) => !data.draft);
-    return notes.map((note) => ({
-        params: { slug: note.id },
-        props: { note },
-    }));
+const slugParam = Astro.params.slug;
+const slug = Array.isArray(slugParam) ? slugParam.join("/") : slugParam;
+
+const notes = await getCollection("notes", ({ data }) => !data.draft);
+const note = notes.find((entry) => entry.id === slug);
+
+if (!note) {
+    return Astro.redirect("/404");
 }
 
-const { note } = Astro.props;
 const { Content } = await render(note);
 ---
 
@@ -21,15 +22,15 @@ const { Content } = await render(note);
     <h1>{note.data.title}</h1>
 
     <div class="meta">
-        <span
-            >{
+        <span>
+            {
                 note.data.date.toLocaleDateString("ru-RU", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                 })
-            }</span
-        >
+            }
+        </span>
         {note.data.tags.map((t) => <span>#{t}</span>)}
     </div>
 
