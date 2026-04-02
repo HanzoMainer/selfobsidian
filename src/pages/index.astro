@@ -8,10 +8,22 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
 ---
 
 <BaseLayout title="selfobsidian">
+    <input
+        id="search"
+        type="text"
+        placeholder="поиск..."
+        autocomplete="off"
+        spellcheck="false"
+    />
     <div class="notes">
         {
             notes.map((note) => (
-                <a href={`/notes/${note.id}`} class="note-item">
+                <a
+                    href={`/notes/${note.id}`}
+                    class="note-item"
+                    data-title={note.data.title.toLowerCase()}
+                    data-tags={note.data.tags.join(" ").toLowerCase()}
+                >
                     <div>
                         <div class="note-title">{note.data.title}</div>
                         {note.data.tags.length > 0 && (
@@ -34,3 +46,43 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
         }
     </div>
 </BaseLayout>
+
+<style>
+    #search {
+        width: 100%;
+        background: none;
+        border: none;
+        border-bottom: 1px solid var(--line);
+        color: var(--text);
+        font: inherit;
+        font-size: 0.9rem;
+        padding: 10px 0;
+        margin-bottom: 10%;
+        outline: none;
+        transition: border-color 0.35s;
+    }
+
+    #search::placeholder {
+        color: var(--muted);
+    }
+
+    #search:focus {
+        border-bottom-color: var(--accent);
+    }
+</style>
+
+<script>
+    const input = document.getElementById("search") as HTMLInputElement;
+    const items = document.querySelectorAll<HTMLElement>(".note-item");
+
+    input.addEventListener("input", () => {
+        const q = input.value.toLowerCase().trim();
+        items.forEach((item) => {
+            const match =
+                !q ||
+                item.dataset.title!.includes(q) ||
+                item.dataset.tags!.includes(q);
+            item.style.display = match ? "" : "none";
+        });
+    });
+</script>
