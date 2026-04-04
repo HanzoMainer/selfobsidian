@@ -15,6 +15,7 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
         autocomplete="off"
         spellcheck="false"
     />
+    <div id="search-count"></div>
     <div class="notes">
         {
             notes.map((note) => (
@@ -69,11 +70,18 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
     #search:focus {
         border-bottom-color: var(--accent);
     }
+
+    #search-count {
+        font-size: small;
+        color: var(--muted);
+    }
 </style>
 
 <script>
     const input = document.getElementById("search") as HTMLInputElement;
     const items = document.querySelectorAll<HTMLElement>(".note-item");
+    const count = document.getElementById("search-count")!;
+    const total = items.length;
 
     input.addEventListener("input", () => {
         const q = input.value.toLowerCase().trim();
@@ -84,5 +92,7 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
                 item.dataset.tags!.includes(q);
             item.style.display = match ? "" : "none";
         });
+        const visible = [...items].filter(i => i.style.display !== "none").length;
+        count!.textContent = `Найдено ${visible} из ${total} `;
     });
 </script>
