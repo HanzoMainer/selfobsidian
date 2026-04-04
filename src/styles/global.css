@@ -84,6 +84,7 @@ nav {
     color: var(--muted);
     white-space: nowrap;
     flex-shrink: 0;
+    align-self: start;
 }
 
 .tags {
@@ -96,6 +97,11 @@ nav {
 .tag {
     font-size: 0.72rem;
     color: var(--muted);
+    transition: 0.15s;
+}
+
+.tag:hover {
+    color: var(--accent);
 }
 
 h1 {

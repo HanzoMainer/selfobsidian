@@ -81,7 +81,7 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
     const input = document.getElementById("search") as HTMLInputElement;
     const items = document.querySelectorAll<HTMLElement>(".note-item");
     const count = document.getElementById("search-count")!;
-    const total = items.length;
+    const tagSearch = document.querySelectorAll<HTMLElement>(".tag");
 
     input.addEventListener("input", () => {
         const q = input.value.toLowerCase().trim();
@@ -92,7 +92,17 @@ const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
                 item.dataset.tags!.includes(q);
             item.style.display = match ? "" : "none";
         });
-        const visible = [...items].filter(i => i.style.display !== "none").length;
-        count!.textContent = `Найдено ${visible} из ${total} `;
+        const visible = [...items].filter(
+            (i) => i.style.display !== "none",
+        ).length;
+        count!.textContent = `Найдено ${visible} из ${items.length} `;
+    });
+
+    tagSearch.forEach((tag) => {
+        tag.addEventListener("click", (e) => {
+            e.preventDefault();
+            input.value = tag.textContent!.replace("#", "").trim();
+            input.dispatchEvent(new Event("input"));
+        });
     });
 </script>
