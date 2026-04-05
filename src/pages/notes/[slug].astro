@@ -18,7 +18,7 @@ const { Content } = await render(note);
 
 <BaseLayout title={note.data.title}>
     <a href="/" class="back">← назад</a>
-
+    <div id="progress"></div>
     <h1>{note.data.title}</h1>
 
     <div class="meta">
@@ -57,6 +57,7 @@ const { Content } = await render(note);
             border-color 0.3s;
         opacity: 0;
         visibility: hidden;
+        border-radius: 15px;
     }
 
     #button-up.visible {
@@ -67,10 +68,21 @@ const { Content } = await render(note);
     #button-up:hover {
         border-color: var(--accent);
     }
+
+    #progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: var(--accent);
+        max-width: 100%;
+        transition: width 0.1s;
+    }
 </style>
 
 <script>
     const buttonUp = document.getElementById("button-up");
+    const progress = document.getElementById("progress");
 
     window.addEventListener("scroll", () => {
         if (window.scrollY > 300) {
@@ -83,4 +95,11 @@ const { Content } = await render(note);
     buttonUp!.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
+
+    window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const noteHeight = document.body.scrollHeight - window.innerHeight;
+        const progressWidth = (scrollTop / noteHeight) * 100;
+        progress!.style.width = `${progressWidth}%`;
+    })
 </script>
