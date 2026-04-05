@@ -37,4 +37,50 @@ const { Content } = await render(note);
     <div class="prose">
         <Content components={{ MdxCallout }} />
     </div>
+    <button id="button-up" title="Переместиться вверх">Вверх</button>
 </BaseLayout>
+
+<style>
+    #button-up {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--text);
+        font-size: 1.0rem;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        transition:
+            opacity 0.3s,
+            visibility 0.3s,
+            border-color 0.3s;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    #button-up.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #button-up:hover {
+        border-color: var(--accent);
+    }
+</style>
+
+<script>
+    const buttonUp = document.getElementById("button-up");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            buttonUp!.classList.add("visible");
+        } else {
+            buttonUp!.classList.remove("visible");
+        }
+    });
+
+    buttonUp!.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+</script>
