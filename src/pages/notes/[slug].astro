@@ -48,7 +48,7 @@ const { Content } = await render(note);
         background: none;
         border: 1px solid var(--line);
         color: var(--text);
-        font-size: 1.0rem;
+        font-size: 1rem;
         padding: 0.4rem 0.8rem;
         cursor: pointer;
         transition:
@@ -78,6 +78,40 @@ const { Content } = await render(note);
         max-width: 100%;
         transition: width 0.1s;
     }
+
+    :global(pre) {
+        position: relative;
+    }
+
+    :global(pre:hover) .copy-button {
+        opacity: 1;
+    }
+
+    :global(.copy-button) {
+        position: absolute;
+        right: 0.5rem;
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--text);
+        font-size: 0.9rem;
+        padding: 0.2rem 0.5rem;
+        cursor: pointer;
+        opacity: 0;
+        transition:
+            opacity 0.2s,
+            border-color 0.2s;
+        border-radius: 10px;
+        align-self: center;
+        width: 35px;
+    }
+
+    :global(pre:hover .copy-button) {
+        opacity: 1;
+    }
+
+    :global(.copy-button:hover) {
+        border-color: var(--accent);
+    }
 </style>
 
 <script>
@@ -85,6 +119,7 @@ const { Content } = await render(note);
     const progress = document.getElementById("progress");
     const pros = document.querySelector(".prose") as HTMLElement;
     const meta = document.querySelector(".meta") as HTMLElement;
+    const pre = document.querySelectorAll("pre") as NodeListOf<HTMLElement>;
 
     window.addEventListener("scroll", () => {
         if (window.scrollY > 300) {
@@ -103,11 +138,31 @@ const { Content } = await render(note);
         const noteHeight = document.body.scrollHeight - window.innerHeight;
         const progressWidth = (scrollTop / noteHeight) * 100;
         progress!.style.width = `${progressWidth}%`;
-    })
+    });
 
     const words = pros.innerText.trim().split(/\s+/).length;
     const readingTime = Math.ceil(words / 200);
     const span = document.createElement("span");
     span.textContent = `~ ${readingTime} мин. чтения`;
     meta.appendChild(span);
+
+    pre.forEach((pre) => {
+        const button = document.createElement("button");
+        button.textContent = "⎘";
+        button.className = "copy-button";
+        button.addEventListener("click", (e) => {
+            const code = e.currentTarget as HTMLElement;
+            const pre = code.parentElement as HTMLElement;
+            const codeElement = pre.querySelector("code");
+            if (codeElement) {
+                const text = codeElement.innerText;
+                navigator.clipboard.writeText(text);
+                button.textContent = "✓";
+                setTimeout(() => {
+                    button.textContent = "⎘";
+                }, 2000);
+            }
+        });
+        pre.appendChild(button);
+    });
 </script>

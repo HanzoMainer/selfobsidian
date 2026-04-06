@@ -59,7 +59,7 @@ const { title } = Astro.props;
     function setTheme(theme: string) {
         root.setAttribute("data-theme", theme);
         localStorage.setItem("theme", theme);
-        toggleButton.textContent = theme === "light" ? "☀" : "☽";
+        toggleButton.textContent = theme === "light" ? "🌝" : "🌚";
     }
 
     toggleButton.addEventListener("click", () => {
