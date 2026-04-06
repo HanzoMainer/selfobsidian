@@ -83,6 +83,8 @@ const { Content } = await render(note);
 <script>
     const buttonUp = document.getElementById("button-up");
     const progress = document.getElementById("progress");
+    const pros = document.querySelector(".prose") as HTMLElement;
+    const meta = document.querySelector(".meta") as HTMLElement;
 
     window.addEventListener("scroll", () => {
         if (window.scrollY > 300) {
@@ -102,4 +104,10 @@ const { Content } = await render(note);
         const progressWidth = (scrollTop / noteHeight) * 100;
         progress!.style.width = `${progressWidth}%`;
     })
+
+    const words = pros.innerText.trim().split(/\s+/).length;
+    const readingTime = Math.ceil(words / 200);
+    const span = document.createElement("span");
+    span.textContent = `~ ${readingTime} мин. чтения`;
+    meta.appendChild(span);
 </script>
