@@ -9,8 +9,12 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
     <head>
+        <script is:inline>
+            const saved = localStorage.getItem("theme") || "dark";
+            document.documentElement.setAttribute("data-theme", saved);
+        </script>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title}</title>
@@ -19,7 +23,51 @@ const { title } = Astro.props;
     <body>
         <nav>
             <a href="/" class="logo">self<span>obsidian</span></a>
+            <button id="theme-toggle" title="Переключить тему">☀</button>
         </nav>
         <slot />
     </body>
 </html>
+
+<style>
+    #theme-toggle {
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--text);
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        transition:
+            opacity 0.3s,
+            visibility 0.3s,
+            border-color 0.3s;
+        border-radius: 15px;
+        min-width: 50px;
+    }
+
+    #theme-toggle:hover {
+        border-color: var(--accent);
+    }
+</style>
+
+<script>
+    const toggleButton = document.getElementById(
+        "theme-toggle",
+    ) as HTMLButtonElement;
+    const root = document.documentElement;
+
+    function setTheme(theme: string) {
+        root.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+        toggleButton.textContent = theme === "light" ? "☀" : "☽";
+    }
+
+    toggleButton.addEventListener("click", () => {
+        const currentTheme = root.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+    });
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+</script>
